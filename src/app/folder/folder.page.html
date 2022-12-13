@@ -50,7 +50,7 @@
                           <ion-col size="12" size-xl class="community-public-recipe-col ion-no-padding ion-no-margin">
                             <ion-card class="search-select-item" (click)="viewItem(recipe)">
                               <ion-card-content style="padding-bottom: 0px;">
-                                <div button lines="none" class="recipe-item recipe-library-item ion-text-wrap ion-no-padding" style="background-color: transparent;">
+                                <ion-item button lines="none" class="recipe-item recipe-library-item ion-text-wrap ion-no-padding" style="background-color: transparent;">
                                   <ion-avatar large slot="end" *ngIf="recipe.img" class="square-avatar">
                                     <img [src]="recipe.thumb" />
                                   </ion-avatar>
@@ -83,27 +83,27 @@
                                       </p>
                                     </div>
                                   </ion-label>
-                                </div>
+                                </ion-item>
                                 <div class="ion-no-padding">
                                   <ion-grid class="bf-no-padding ion-no-margin reduced-label-size">
                                     <ion-row class="ion-no-padding ion-no-margin">
                                       <ion-col class="ion-no-padding ion-no-margin ion-text-left">
-                                        <button class="ion-text-wrap ion-no-padding" disabled fill="clear" size="small" color="primary">
+                                        <ion-button class="ion-text-wrap ion-no-padding" disabled fill="clear" size="small" color="primary">
                                           <ion-icon name='md-thumbs-up'></ion-icon>
                                           &nbsp;{{ recipe._positive || 0 }}
-                                        </button>
+                                        </ion-button>
                                       </ion-col>
                                       <ion-col class="ion-no-padding ion-no-margin ion-text-center">
-                                        <button class="ion-text-wrap ion-no-padding" disabled fill="clear" size="small" color="primary">
+                                        <ion-button class="ion-text-wrap ion-no-padding" disabled fill="clear" size="small" color="primary">
                                           <ion-icon name='md-eye' color="primary"></ion-icon>
                                           &nbsp;{{ recipe._views || 0 }}
-                                        </button>
+                                        </ion-button>
                                       </ion-col>
                                       <ion-col class="ion-no-padding ion-no-margin ion-text-right">
-                                        <button class="ion-text-wrap ion-no-padding" disabled fill="clear" size="small" color="primary">
+                                        <ion-button class="ion-text-wrap ion-no-padding" disabled fill="clear" size="small" color="primary">
                                           <ion-icon name='md-cloud-download'></ion-icon>
                                           &nbsp;{{ recipe._acquisitions || 0 }}
-                                        </button>
+                                        </ion-button>
                                       </ion-col>
                                     </ion-row>
                                   </ion-grid>
