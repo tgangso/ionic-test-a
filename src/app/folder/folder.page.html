@@ -15,7 +15,118 @@
   </ion-header>
 
   <div id="container">
-    <strong class="capitalize">{{ folder }}</strong>
-    <p>Explore <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <ais-instantsearch [config]="config" class="community-recipe-browser">
+      <ais-search-box></ais-search-box>
+      <ais-infinite-hits>
+        <ng-template let-hits="hits" let-results="results" let-refine="showMore">
+          <ion-grid class="bf-no-padding">
+            <ion-row>
+              <ng-container>
+                <ion-col size="12" class="ion-no-padding">
+                  <ion-list lines="none" class="ion-no-margin ion-no-padding">
+                    <ion-item-divider style="margin-top: 4px" light>
+                      <ion-label class="ion-text-wrap ion-no-padding">
+                      </ion-label>
+                      <ion-grid class="bf-no-padding">
+                        <ion-row>
+                          <ion-col size="6"><span translate>Results</span>&nbsp;<span class="secondary number-of-recipes-span" secondary><span class="faded-capsulation">(</span>{{ results?.nbHits || 0 }}<span class="faded-capsulation">)</span></span></ion-col>
+                          <ion-col size="6" class="public-search-sortby-container ion-text-right">
+                          </ion-col>
+                        </ion-row>
+                      </ion-grid>
+                    </ion-item-divider>
+                    <ion-grid class="bf-no-padding">
+                      <ion-row *ngIf="results && !results.nbHits && hits?.length === 0 && results?.query">
+                        <ion-col>
+                          <ion-item class="ion-text-wrap">
+                            <ion-label class="ion-text-wrap">
+                              <span translate>No recipes found matching your search</span>&nbsp;<i class="secondary"><b>{{ results?.query }}</b></i>
+                            </ion-label>
+                          </ion-item>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row *ngIf="results?.nbHits > 0">
+                        <ng-container *ngFor="let recipe of hits">
+                          <ion-col size="12" size-xl class="community-public-recipe-col ion-no-padding ion-no-margin">
+                            <ion-card class="search-select-item" (click)="viewItem(recipe)">
+                              <ion-card-content style="padding-bottom: 0px;">
+                                <ion-item button lines="none" class="recipe-item recipe-library-item ion-text-wrap ion-no-padding" style="background-color: transparent;">
+                                  <ion-avatar large slot="end" *ngIf="recipe.img" class="square-avatar">
+                                    <img [src]="recipe.thumb" />
+                                  </ion-avatar>
+                                  <ion-label class="ion-text-wrap ion-no-padding ion-no-margin">
+                                    <h2>
+                                      <div *ngIf="recipe?.name" class="community-public-recipe-name ellipsis-text">
+                                        <b><ais-highlight attribute="name" [hit]="recipe"></ais-highlight></b><br>
+                                        <span [class.acid]="recipe._type === 'home'" [class.chill]="recipe._type === 'pro'" [class.darkorite]="recipe._type === 'provider'" style="font-size: 0.8em" *ngIf="recipe?._handle">
+                                          <ais-highlight attribute="_handle" [hit]="recipe"></ais-highlight>
+                                          <ion-icon *ngIf="recipe?._type === 'provider'" name="md-checkmark" color="darkorite" small class="inl-icon"></ion-icon>
+                                        </span>
+                                      </div>
+                                    </h2>
+                                    <div class="community-public-recipe-style-name secondary ellipsis-text">
+                                      <span class="reduced-label-size" *ngIf="recipe?.style?.name">
+                                        <ais-highlight attribute="style.name" [hit]="recipe"></ais-highlight>
+                                      </span>
+                                      <span class="reduced-label-size" *ngIf="recipe?.type">&nbsp;(<ais-highlight attribute="type" [hit]="recipe"></ais-highlight>)</span>
+                                    </div>
+                                    <p>
+                                      <span *ngIf="recipe?.abv > 0"><b translate>ABV</b> {{ recipe?.abv }}%&nbsp;</span>
+                                      <span *ngIf="recipe?.og > 1"><b translate>OG</b> {{ (recipe?.totalGravity || recipe?.og) }}&nbsp;</span>
+                                      <span *ngIf="recipe?.fg && recipe?.og > 1"><b translate>FG</b>
+                                        {{ recipe?.fg }}&nbsp;</span>
+                                      <span *ngIf="recipe?.ibu >= 0"><b translate>IBU</b> {{ recipe?.ibu }}</span>
+                                    </p>
+                                    <div *ngIf="recipe?.tags?.length > 0" class="ellipsis-text">
+                                      <p class="community-public-recipe-tags ellipsis-text" style="font-size: 0.9em;">
+                                        <span class="reduced-label-size ellipsis-text"><ais-highlight attribute="_tags" [hit]="recipe"></ais-highlight></span>
+                                      </p>
+                                    </div>
+                                  </ion-label>
+                                </ion-item>
+                                <div class="ion-no-padding">
+                                  <ion-grid class="bf-no-padding ion-no-margin reduced-label-size">
+                                    <ion-row class="ion-no-padding ion-no-margin">
+                                      <ion-col class="ion-no-padding ion-no-margin ion-text-left">
+                                        <ion-button class="ion-text-wrap ion-no-padding" disabled fill="clear" size="small" color="primary">
+                                          <ion-icon name='md-thumbs-up'></ion-icon>
+                                          &nbsp;{{ recipe._positive || 0 }}
+                                        </ion-button>
+                                      </ion-col>
+                                      <ion-col class="ion-no-padding ion-no-margin ion-text-center">
+                                        <ion-button class="ion-text-wrap ion-no-padding" disabled fill="clear" size="small" color="primary">
+                                          <ion-icon name='md-eye' color="primary"></ion-icon>
+                                          &nbsp;{{ recipe._views || 0 }}
+                                        </ion-button>
+                                      </ion-col>
+                                      <ion-col class="ion-no-padding ion-no-margin ion-text-right">
+                                        <ion-button class="ion-text-wrap ion-no-padding" disabled fill="clear" size="small" color="primary">
+                                          <ion-icon name='md-cloud-download'></ion-icon>
+                                          &nbsp;{{ recipe._acquisitions || 0 }}
+                                        </ion-button>
+                                      </ion-col>
+                                    </ion-row>
+                                  </ion-grid>
+                                </div>
+                              </ion-card-content>
+                            </ion-card>
+                          </ion-col>
+                        </ng-container>
+                      </ion-row>
+                    </ion-grid>
+                  </ion-list>
+                </ion-col>
+              </ng-container>
+            </ion-row>
+          </ion-grid>
+          <div class="public-add-recipe-bottom-bar-container" *ngIf="canShowMoreButton && hits && hits?.length > 0 && results && results?.nbHits > 0 && ((results?.page || 0) + 1 < results?.nbPages)" style="padding-bottom: 22px;">
+            <ion-button expand="block" color="favorite" class="change-status-batch-button" slot="start" (click)="test(results, hits); refine()" shape="round">
+              <ion-icon slot="start" name="md-return-right"></ion-icon>
+              <span><span translate>Show more</span>...</span>
+            </ion-button>
+          </div>
+        </ng-template>
+      </ais-infinite-hits>
+    </ais-instantsearch>
   </div>
 </ion-content>
